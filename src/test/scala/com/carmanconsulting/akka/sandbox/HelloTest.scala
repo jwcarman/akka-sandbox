@@ -1,7 +1,9 @@
 package com.carmanconsulting.akka.sandbox
 
 import org.junit.Test
-import akka.actor.Props
+import akka.actor.{ActorRef, Props}
+import scala.concurrent.duration._
+import scala.language.postfixOps
 
 class HelloTest extends AkkaTestCase {
 
@@ -11,5 +13,13 @@ class HelloTest extends AkkaTestCase {
     hello ! "Akka"
     expectMsg("Hello, Akka!")
   }
+
+  @Test
+  def testHelloWithNullSender(): Unit = {
+    val hello = system.actorOf(Props[HelloActor], "hello")
+    hello.tell("Akka", ActorRef.noSender)
+    expectNoMsg(2 seconds)
+  }
+
 
 }
